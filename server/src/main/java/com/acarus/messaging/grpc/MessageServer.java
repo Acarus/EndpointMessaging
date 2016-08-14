@@ -12,6 +12,8 @@ public class MessageServer {
     private static final String MEMCACHED_HOST = "127.0.0.1";
     private static final int MEMCACHED_PORT = 11211;
 
+    private static final int LISTEN_PORT = 9057;
+
     private Server server;
 
     public MessageServer(int port) throws IOException {
@@ -37,7 +39,11 @@ public class MessageServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        MessageServer server = new MessageServer(9057);
+        int port = LISTEN_PORT;
+        if (args.length > 0) {
+            port = Integer.parseInt(args[0]);
+        }
+        MessageServer server = new MessageServer(port);
         server.blockUntilShutdown();
     }
 }

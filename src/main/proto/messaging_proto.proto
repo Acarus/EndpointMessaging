@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package com.acarus.messaging.gen;
+
+service MessageProvider {
+    rpc receiveMessages(EndpointInfo) returns (stream Message) {}
+    rpc sendMessages(stream Message) returns (stream MessageDeliveryStatus) {}
+}
+
+message EndpointInfo {
+    string id = 1;
+}
+
+message Message {
+    string id = 1;
+    string sender = 2;
+    string receiver = 3;
+    bytes data = 4;
+}
+
+message MessageDeliveryStatus {
+    string messageId = 1;
+
+    enum DelieryStatus {
+        SUCCESS = 0;
+        FAILURE = 1;
+    }
+    DelieryStatus status = 2;
+}
+
+message TextMessage {
+    string text = 1;
+}

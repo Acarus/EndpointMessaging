@@ -68,7 +68,25 @@ public class MessageClient {
     }
 
     public interface MessageListener<T extends GeneratedMessage> {
-        void onReceive(T message);
+        void onReceive(T message, String sender);
+    }
+
+    private static class MessageDeliveryStatusObserver implements StreamObserver<MessageDeliveryStatus> {
+
+        @Override
+        public void onNext(MessageDeliveryStatus messageDeliveryStatus) {
+            // TODO: implement onNext
+        }
+
+        @Override
+        public void onError(Throwable throwable) {
+            // TODO: implement onError
+        }
+
+        @Override
+        public void onCompleted() {
+            // TODO: implement onCompleted
+        }
     }
 
     private class MessageObserver implements StreamObserver<Message> {
@@ -83,31 +101,13 @@ public class MessageClient {
                 try {
                     Method parseFrom = clazz.getDeclaredMethod("parseFrom", ByteString.class);
                     GeneratedMessage data = (GeneratedMessage) parseFrom.invoke(null, message.getData());
-                    listener.onReceive(data);
+                    listener.onReceive(data, message.getSender());
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
             } else {
                 // no listeners for this type of message
             }
-        }
-
-        @Override
-        public void onError(Throwable throwable) {
-            // TODO: implement onError
-        }
-
-        @Override
-        public void onCompleted() {
-            // TODO: implement onCompleted
-        }
-    }
-
-    private static class MessageDeliveryStatusObserver implements StreamObserver<MessageDeliveryStatus> {
-
-        @Override
-        public void onNext(MessageDeliveryStatus messageDeliveryStatus) {
-            // TODO: implement onNext
         }
 
         @Override

@@ -72,7 +72,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>com.acarus.messaging.examples.SimpleMessageExchange</mainClass>
+                            <mainClass>com.acarus.messaging.examples.SimpleMessageExchangeExample</mainClass>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>

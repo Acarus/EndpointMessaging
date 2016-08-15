@@ -4,13 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>Cybervision</groupId>
-    <artifactId>Endpoint-Messaging</artifactId>
+    <groupId>com.acarus.messaging</groupId>
+    <artifactId>endpoint-messaging</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>common</module>
         <module>server</module>
         <module>client</module>
         <module>examples</module>
     </modules>
+
+    <properties>
+        <akka.version>2.4.8</akka.version>
+        <grpc.version>0.15.0</grpc.version>
+        <protobuf.version>3.0.0</protobuf.version>
+        <spymemcached.version>2.12.1</spymemcached.version>
+        <lombok.version>1.16.10</lombok.version>
+    </properties>
 </project>

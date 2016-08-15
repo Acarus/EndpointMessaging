@@ -3,20 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>Endpoint-Messaging</artifactId>
-        <groupId>Cybervision</groupId>
+        <artifactId>endpoint-messaging</artifactId>
+        <groupId>com.acarus.messaging</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>endpoint-messaging-server</artifactId>
-
-    <properties>
-        <akka.version>2.4.8</akka.version>
-        <grpc.version>0.15.0</grpc.version>
-        <protobuf.version>3.0.0</protobuf.version>
-        <spymemcached.version>2.12.1</spymemcached.version>
-        <lombok.version>1.16.10</lombok.version>
-    </properties>
 
     <dependencies>
         <!-- Protocol buffers -->
@@ -69,16 +61,16 @@
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Common -->
+        <dependency>
+            <groupId>com.acarus.messaging</groupId>
+            <artifactId>endpoint-messaging-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
-        <extensions>
-            <extension>
-                <groupId>kr.motd.maven</groupId>
-                <artifactId>os-maven-plugin</artifactId>
-                <version>1.4.1.Final</version>
-            </extension>
-        </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -88,26 +80,6 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <version>0.5.0</version>
-                <configuration>
-                    <protocArtifact>com.google.protobuf:protoc:3.0.0-beta-3:exe:${os.detected.classifier}</protocArtifact>
-                    <pluginId>grpc-java</pluginId>
-                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:0.15.0:exe:${os.detected.classifier}</pluginArtifact>
-                    <outputDirectory>${basedir}/src/main/java/</outputDirectory>
-                    <clearOutputDirectory>false</clearOutputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                            <goal>compile-custom</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.jolira</groupId>

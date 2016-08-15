@@ -15,7 +15,8 @@ message Message {
     string id = 1;
     string sender = 2;
     string receiver = 3;
-    bytes data = 4;
+    string dataClass = 4;
+    bytes data = 5;
 }
 
 message MessageDeliveryStatus {
@@ -26,8 +27,4 @@ message MessageDeliveryStatus {
         FAILURE = 1;
     }
     DelieryStatus status = 2;
-}
-
-message TextMessage {
-    string text = 1;
 }

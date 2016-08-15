@@ -7,6 +7,8 @@ import com.google.protobuf.GeneratedMessage;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.StreamObserver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.UUID;
@@ -17,6 +19,8 @@ import static com.acarus.messaging.gen.MessagingProto.*;
 
 public class MessageClient {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MessageClient.class);
+
     private final ManagedChannel channel;
     private final StreamObserver<Message> outgoingMessageStream;
     private final EndpointInfo endpointInfo;
@@ -24,6 +28,7 @@ public class MessageClient {
     private ConcurrentHashMap<String, Class> classes = new ConcurrentHashMap<>();
 
     public MessageClient(String host, int port) {
+        LOG.info("Connecting to {}:{}", host, port);
         endpointInfo = EndpointInfo.newBuilder()
                 .setId(UUID.randomUUID().toString())
                 .build();
@@ -35,6 +40,7 @@ public class MessageClient {
         MessageProviderStub asyncStub = MessageProviderGrpc.newStub(channel);
         outgoingMessageStream = asyncStub.sendMessages(new MessageDeliveryStatusObserver());
         asyncStub.receiveMessages(endpointInfo, new MessageObserver());
+        LOG.debug("Endpoint: [{}] is started", endpointInfo);
     }
 
     public EndpointInfo getEndpointInfo() {
@@ -42,6 +48,7 @@ public class MessageClient {
     }
 
     public <T extends GeneratedMessage> void sendMessage(T msg, String receiver) {
+        LOG.debug("Sending message: [{}] to endpoint: {}", msg, receiver);
         Message message = Message.newBuilder()
                 .setReceiver(receiver)
                 .setSender(endpointInfo.getId())
@@ -55,16 +62,19 @@ public class MessageClient {
     public <T extends GeneratedMessage> void addMessageListener(MessageListener<T> listener, Class<T> clazz) {
         listeners.put(clazz.getName(), listener);
         classes.put(clazz.getName(), clazz);
+        LOG.debug("Set listener for messageClass: {}", clazz.getName());
     }
 
     public void close() throws InterruptedException {
-        if (channel != null) {
-            channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
-        }
-
+        LOG.info("Stopping client");
         if (outgoingMessageStream != null) {
             outgoingMessageStream.onCompleted();
         }
+
+        if (channel != null) {
+            channel.shutdown().awaitTermination(5, TimeUnit.SECONDS);
+        }
+        LOG.info("Client is stopped");
     }
 
     public interface MessageListener<T extends GeneratedMessage> {
@@ -95,18 +105,19 @@ public class MessageClient {
         @SuppressWarnings("unchecked")
         public void onNext(Message message) {
             String messageClassName = message.getDataClass();
-            if (MessageClient.this.listeners.containsKey(messageClassName)) {
+            if (listeners.containsKey(messageClassName)) {
                 Class clazz = classes.get(messageClassName);
                 MessageListener listener = listeners.get(messageClassName);
                 try {
                     Method parseFrom = clazz.getDeclaredMethod("parseFrom", ByteString.class);
                     GeneratedMessage data = (GeneratedMessage) parseFrom.invoke(null, message.getData());
+                    LOG.debug("Received message: [{}] from endpoint: {}", data, message.getSender());
                     listener.onReceive(data, message.getSender());
                 } catch (Exception e) {
                     // TODO: handle exception
                 }
             } else {
-                // no listeners for this type of message
+                LOG.warn("Received message but no listeners found");
             }
         }
 

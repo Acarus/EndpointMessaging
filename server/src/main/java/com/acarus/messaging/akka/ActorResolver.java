@@ -15,7 +15,7 @@ public class ActorResolver {
 
     private static final Logger LOG = LoggerFactory.getLogger(ActorResolver.class);
 
-    private static final int MEMCACHED_ITEM_EXPIRATION_TIME = 900;
+    private static final int MEMCACHED_ITEM_EXPIRATION_TIME = 100 * 60 * 60;
 
     private final ActorSystem actorSystem;
     private MemcachedClient memcachedClient;

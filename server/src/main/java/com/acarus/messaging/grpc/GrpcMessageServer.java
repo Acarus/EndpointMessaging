@@ -1,6 +1,7 @@
 package com.acarus.messaging.grpc;
 
 import akka.actor.ActorSystem;
+import com.acarus.messaging.MessageService;
 import com.acarus.messaging.akka.ActorResolver;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
@@ -9,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class MessageServer {
+public class GrpcMessageServer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MessageServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GrpcMessageServer.class);
 
     private static final String MEMCACHED_HOST = "127.0.0.1";
     private static final int MEMCACHED_PORT = 11211;
@@ -19,7 +20,7 @@ public class MessageServer {
 
     private Server server;
 
-    public MessageServer(int port) throws IOException {
+    public GrpcMessageServer(int port) throws IOException {
         LOG.info("Starting server on port: {}", port);
         ActorSystem actorSystem = ActorSystem.create("MessagingActorSystem");
         ActorResolver actorResolver = new ActorResolver(actorSystem, MEMCACHED_HOST, MEMCACHED_PORT);
@@ -50,7 +51,7 @@ public class MessageServer {
         if (args.length > 0) {
             port = Integer.parseInt(args[0]);
         }
-        MessageServer server = new MessageServer(port);
+        GrpcMessageServer server = new GrpcMessageServer(port);
         server.blockUntilShutdown();
     }
 }

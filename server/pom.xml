@@ -74,6 +74,12 @@
             <version>${logback.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>${java.websocket.version}</version>
+        </dependency>
+
         <!-- Common -->
         <dependency>
             <groupId>com.acarus.messaging</groupId>
@@ -100,7 +106,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>com.acarus.messaging.grpc.MessageServer</mainClass>
+                            <mainClass>com.acarus.messaging.grpc.GrpcMessageServer</mainClass>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>

@@ -97,7 +97,7 @@
                 <executions>
                     <execution>
                         <configuration>
-                            <mainClass>com.acarus.messaging.grpc.MessageServer</mainClass>
+                            <mainClass>com.acarus.messaging.grpc.GrpcMessageServer</mainClass>
                         </configuration>
                         <goals>
                             <goal>one-jar</goal>

@@ -1,4 +1,4 @@
-package com.acarus.messaging.grpc;
+package com.acarus.messaging;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
